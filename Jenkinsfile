@@ -31,19 +31,22 @@ pipeline {
                 sh 'npm audit || true'
             }
         }
-stage('SonarCloud Analysis') {
-    environment {
-        SONAR_TOKEN = credentials('SONAR_TOKEN')
-    }
-    steps {
-        withSonarQubeEnv('SonarCloud') {
-            sh '''
-              ${SCANNER_HOME}/bin/sonar-scanner \
-                -Dsonar.projectKey=dnitisah66_8.2CDevSecOps \
-                -Dsonar.organization=dnitisah66 \
-                -Dsonar.host.url=https://sonarcloud.io \
-                -Dsonar.login=$SONAR_TOKEN
-            '''
+
+        stage('SonarCloud Analysis') {
+            environment {
+                SONAR_TOKEN = credentials('SONAR_TOKEN')
+            }
+            steps {
+                withSonarQubeEnv('SonarCloud') {
+                    sh '''
+                      ${SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.projectKey=dnitisah66_8.2CDevSecOps \
+                        -Dsonar.organization=dnitisah66 \
+                        -Dsonar.host.url=https://sonarcloud.io \
+                        -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
+            }
         }
-    }
-}
+    } // closes stages
+} // closes pipeline
