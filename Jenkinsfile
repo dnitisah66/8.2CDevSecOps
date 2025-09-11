@@ -32,18 +32,21 @@ pipeline {
             }
         }
 
-        stage('SonarCloud Analysis') {
-            environment {
-                SONAR_TOKEN = credentials('SONAR_TOKEN')
-            }
-            steps {
-                sh '''
-                  wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip -O sonar-scanner.zip
-                  unzip sonar-scanner.zip
-                  ./sonar-scanner-*/bin/sonar-scanner \
-                    -Dsonar.login=$SONAR_TOKEN
-                '''
-            }
+       stage('SonarCloud Analysis') {
+    environment {
+        SONAR_TOKEN = credentials('SONAR_TOKEN')
+    }
+    steps {
+        withSonarQubeEnv('SonarCloud') {
+            sh '''
+              ${SCANNER_HOME}/bin/sonar-scanner \
+                -Dsonar.projectKey=your_project_key \
+                -Dsonar.organization=your_org \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=$SONAR_TOKEN
+            '''
         }
     }
+}
+
 }
